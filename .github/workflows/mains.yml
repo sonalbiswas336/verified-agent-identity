@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       agent_name:
-        description: "Sonal"
+        description: "Agent Name"
         required: true
         default: "Sonal"
       agent_description:
-        description: "Sonal"
+        description: "Agent Description"
         required: true
         default: "Sonal AI Agent"
 
@@ -29,13 +29,11 @@ jobs:
         run: npx clawhub@latest install verified-agent-identity
 
       - name: Install script dependencies
-        run: |
-          cd scripts
-          npm install
+        run: npm install --prefix scripts
 
       - name: Step 2 - Create new Ethereum Identity
         run: node scripts/createNewEthereumIdentity.js
 
       - name: Step 3 - Link Human to Agent
         run: |
-          node scripts/manualLinkHumanToAgent.js --challenge '{"name": "Sonal", "description": "Sonal AI Agent"}'
+          node scripts/manualLinkHumanToAgent.js --challenge "{\"name\": \"${{ github.event.inputs.agent_name }}\", \"description\": \"${{ github.event.inputs.agent_description }}\"}"
